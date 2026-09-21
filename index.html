@@ -167,10 +167,10 @@ li.ok .tick,.est.off .tick{background:var(--green);border-color:var(--green);col
 .sheet{min-height:46vh;font-size:.9rem}
 .empty{color:var(--muted);padding:22px 4px;text-align:center}
 
-.money{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin:4px 0 0}
+.money{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:8px;margin:4px 0 0;align-items:start}
 .money div{background:var(--face);color:#F2F4F6;border-radius:7px;padding:11px 12px;border:3px solid transparent;background:linear-gradient(#0D131B,#0D131B) padding-box,var(--chrome) border-box}
 .money span{display:block;color:#AEB9C6;font-size:.8rem}
-.money b{font:800 1.35rem/1.15 var(--body);font-stretch:112%}
+.money b{font:800 clamp(1.05rem,4.4vw,1.35rem)/1.15 var(--body);font-stretch:112%;overflow-wrap:anywhere}
 .grp{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin:20px 2px 7px}
 .grp b{font:700 1rem/1.1 var(--body);font-stretch:106%}
 .grp span{font-size:.82rem;color:var(--muted);text-align:right}
@@ -714,7 +714,7 @@ function renderHead(){
   const spent=sum(state.parts.filter(p=>["ordered","have","installed"].includes(p.status)),pc)+sum(state.quotes,qpaid);
   const planned=sum(state.parts.filter(p=>!p.status||p.status==="need"||p.status==="cart"),pc)+sum(state.quotes,qowed);
   const set=state.settings.find(x=>x.id==="main"),bud=set&&+set.budget||0,left=bud-spent-planned;
-  $("spend").textContent=((spent||planned)?"Spent "+money(spent)+". Still to buy on priced lines "+money(planned)+". This is not the build total, see the projection in Shops.":"")+(bud?" Budget "+money(bud)+", "+(left>=0?money(left)+" left.":money(-left)+" over."):"");
+  $("spend").textContent=((spent||planned)?"Spent "+money(spent)+". Still to buy on priced lines "+money(planned)+", which is not the whole build.":"")+(bud?" Budget "+money(bud)+", "+(left>=0?money(left)+" left.":money(-left)+" over."):"");
   $("spend").classList.toggle("late",!!bud&&left<0);
   $("budgetSet").textContent=bud?"Change budget":"Set a budget";
   const today=localDay(),dues=all.filter(t=>t.due&&t.status!=="done").sort((a,b)=>a.due<b.due?-1:1);
@@ -940,7 +940,7 @@ function showPage(c){
     $("pgcap").innerHTML="Page "+pg+(on?`. <b style="color:var(--ink)">${esc(c.d)}</b> #${esc(c.no)} is in the orange box.`:".")+" Drag to look around.";
     $("pgin").style.cssText="width:"+W+"px;height:"+H+"px";
     img.style.cssText="width:"+W*3+"px;height:"+H*3+"px;left:"+(-col*W)+"px;top:"+(-row*H)+"px";
-    $("pgmark").style.cssText=on?"left:"+(c.x*W+W*.012)+"px;top:"+(c.y*H-W*.0095)+"px;width:"+W*.09+"px;height:"+W*.019+"px":"display:none";
+    $("pgmark").style.cssText=on?"left:"+(c.x*W+W*.012)+"px;top:"+(c.y*H-W*.0095)+"px;width:"+((c.x<.492?.482:.962)-c.x-.012)*W+"px;height:"+W*.019+"px":"display:none";
     if(jump){v.scrollLeft=on?Math.max(0,c.x*W-cw*.2):0;v.scrollTop=on?Math.max(0,c.y*H-v.clientHeight*.62):0;}
     const i=PAGES.indexOf(pg);$("pgPrev").disabled=i<=0;$("pgNext").disabled=i>=PAGES.length-1;};
   lay(true);
